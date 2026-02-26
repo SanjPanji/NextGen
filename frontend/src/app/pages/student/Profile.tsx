@@ -184,13 +184,28 @@ export default function StudentProfile() {
   const calculateCompleteness = () => {
     let score = 0;
     const values = watch();
+
+    const hasUniversity = !!values.university;
+    const hasSpecialization = !!values.specialization;
+    const hasSkills = selectedSkills.length > 0;
+    const hasResume = !!(resumeFile || profile?.resumeUrl);
+    const hasGithub = !!values.githubUrl;
+
+    // Если всё полностью пусто, даже если есть имя, то показываем 0% для мотивации
+    if (!hasUniversity && !hasSpecialization && !hasSkills && !hasResume && !hasGithub) {
+      return 0;
+    }
+
     if (values.name) score += 15;
-    if (values.university) score += 15;
-    if (values.specialization) score += 15;
+    if (hasUniversity) score += 15;
+    if (hasSpecialization) score += 15;
+
     if (selectedSkills.length >= 3) score += 30;
-    else if (selectedSkills.length > 0) score += 15;
-    if (resumeFile || profile?.resumeUrl) score += 15;
-    if (values.githubUrl) score += 10;
+    else if (hasSkills) score += 15;
+
+    if (hasResume) score += 15;
+    if (hasGithub) score += 10;
+
     return Math.min(score, 100);
   };
 

@@ -131,13 +131,24 @@ app.post("/make-server-5770370e/student/profile", async (c) => {
 
     // Вычисляем заполненность профиля (0-100%)
     let completeness = 0;
-    if (body.name) completeness += 15;
-    if (body.university) completeness += 15;
-    if (body.specialization) completeness += 15;
-    if (body.skills && body.skills.length >= 3) completeness += 30;
-    else if (body.skills && body.skills.length > 0) completeness += 15;
-    if (body.resumeUrl) completeness += 15;
-    if (body.githubUrl) completeness += 10;
+
+    const hasUniversity = !!body.university;
+    const hasSpecialization = !!body.specialization;
+    const hasSkills = body.skills && body.skills.length > 0;
+    const hasResume = !!body.resumeUrl;
+    const hasGithub = !!body.githubUrl;
+
+    if (!hasUniversity && !hasSpecialization && !hasSkills && !hasResume && !hasGithub) {
+      completeness = 0;
+    } else {
+      if (body.name) completeness += 15;
+      if (hasUniversity) completeness += 15;
+      if (hasSpecialization) completeness += 15;
+      if (body.skills && body.skills.length >= 3) completeness += 30;
+      else if (hasSkills) completeness += 15;
+      if (hasResume) completeness += 15;
+      if (hasGithub) completeness += 10;
+    }
 
     const profile = {
       ...body,
