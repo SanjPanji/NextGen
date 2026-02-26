@@ -41,6 +41,15 @@ async def create_vacancy(
     supabase = get_supabase()
     company = _get_employer_company(user.user_id)
     
+    # Автоматически создаём запись работодателя для пользователей, зарегистрированных до добавления триггера
+    try:
+        supabase.table("employers").upsert(
+            {"id": user.user_id, "company_name": company or "Unknown Company"}, 
+            on_conflict="id"
+        ).execute()
+    except Exception as e:
+        logger.warning(f"Не удалось обновить запись в таблице employers для {user.user_id}: {e}")
+        
     vacancy_data = {
         "employer_id": user.user_id,
         "title": data.title,
