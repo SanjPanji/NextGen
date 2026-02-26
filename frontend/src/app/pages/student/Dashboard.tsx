@@ -35,7 +35,10 @@ export default function StudentDashboard() {
   // Рассчитываем матчи на клиенте
   const matches = useMemo(() => {
     if (!vacancies || !profile) return [];
-    return vacanciesToMatches(vacancies, profile).sort((a, b) => b.matchPercent - a.matchPercent);
+    const safeVacancies = Array.isArray(vacancies) ? vacancies : [];
+    const safeSkills = Array.isArray(profile.skills) ? profile.skills : [];
+    return vacanciesToMatches(safeVacancies, { ...profile, skills: safeSkills })
+      .sort((a, b) => b.matchPercent - a.matchPercent);
   }, [vacancies, profile]);
 
   const matchesLoading = profileLoading || vacanciesLoading;

@@ -87,7 +87,7 @@ export const getStudentMatches = async (): Promise<VacancyMatch[]> => {
 /** Получить все доступные вакансии (для студентов) */
 export const getAllVacancies = async (): Promise<Vacancy[]> => {
   const { data } = await api.get<Vacancy[]>('/api/v1/students/vacancies');
-  return data;
+  return Array.isArray(data) ? data : [];
 };
 
 /** Получить AI рекомендации для студента */
