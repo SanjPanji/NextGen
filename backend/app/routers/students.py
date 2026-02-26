@@ -363,7 +363,7 @@ async def connect_github(
         github_data["top_technologies"]
     ))
     
-    supabase.table("profiles").upsert({
+    supabase.table("student_profiles").upsert({
         "user_id": user.user_id,
         "skills": new_skills,
         "updated_at": datetime.now(timezone.utc).isoformat(),
