@@ -65,27 +65,27 @@ def calculate_profile_completion(profile: dict) -> int:
     """Вычисляет процент заполненности профиля студента (0-100)."""
     score = 0
     
-    # Имя — 20 баллов
-    if profile.get("name"): score += 20
+    # Имя — 15 баллов
+    if profile.get("name"): score += 15
     
-    # Университет — 10 баллов
-    if profile.get("university"): score += 10
+    # Университет — 15 баллов
+    if profile.get("university"): score += 15
     
-    # Био — 20 баллов
-    if profile.get("bio"): score += 20
+    # Специальность — 15 баллов
+    if profile.get("specialization"): score += 15
     
     # Навыки — до 30 баллов
     skills_obj = profile.get("skills", [])
     if isinstance(skills_obj, dict):
         hard_skills = skills_obj.get("hard_skills", [])
-        if len(hard_skills) >= 5: score += 30
+        if len(hard_skills) >= 3: score += 30
         elif len(hard_skills) >= 1: score += 15
     elif isinstance(skills_obj, list):
-        if len(skills_obj) >= 5: score += 30
+        if len(skills_obj) >= 3: score += 30
         elif len(skills_obj) >= 1: score += 15
     
-    # Резюме — 10 баллов
-    if profile.get("resume_url"): score += 10
+    # Резюме — 15 баллов
+    if profile.get("resume_url"): score += 15
     
     # GitHub — 10 баллов
     if profile.get("github_url"): score += 10
@@ -176,7 +176,7 @@ async def get_profile(user: CurrentUser = Depends(require_role("student"))):
         # Вычисляем прогресс
         completion = calculate_profile_completion({
             "name": profile.get("name") or student.get("name"),
-            "bio": student.get("bio"),
+            "specialization": student.get("specialty"),
             "skills": skills_raw,
             "university": student.get("university") or profile.get("organization"),
             "resume_url": student.get("resume_url"),
@@ -211,8 +211,8 @@ async def get_profile(user: CurrentUser = Depends(require_role("student"))):
             organization=None,
             bio="",
             skills=[],
-            created_at=None,
-            updated_at=None,
+            createdAt=None,
+            updatedAt=None,
         )
 
 
@@ -339,7 +339,7 @@ async def connect_github(
     → добавляет технологии к профилю студента.
     """
     try:
-        github_data = await analyze_github_profile(data.github_url)
+        github_data = await analyze_github_profile(data.githubUrl)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     
