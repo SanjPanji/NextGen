@@ -1,0 +1,32 @@
+# === AI папка ===
+/AI/
+
+# === Python / Backend ===
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/**/*.pyc
+backend/**/*.pyo
+backend/.env
+backend/*.egg-info/
+backend/dist/
+backend/build/
+
+# === Node / Frontend ===
+frontend/node_modules/
+frontend/dist/
+frontend/.next/
+frontend/build/
+frontend/.env.local
+frontend/.env.production
+
+# === OS ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === IDE ===
+.vscode/
+.idea/
+*.suo
+*.user
