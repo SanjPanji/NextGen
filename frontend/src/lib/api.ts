@@ -114,10 +114,11 @@ export const uploadResume = async (file: File): Promise<{
 
 /** Отправить GitHub URL на анализ */
 export const analyzeGitHub = async (githubUrl: string): Promise<{ skills: string[]; repos: number }> => {
-  // Mock анализ GitHub — в продакшене это FastAPI endpoint с ML
-  await new Promise((resolve) => setTimeout(resolve, 2500)); // Имитация задержки AI
-  const skills = ['React', 'TypeScript', 'Node.js', 'JavaScript', 'CSS', 'Git'];
-  return { skills, repos: 23 };
+  const { data } = await api.post('/api/v1/students/connect-github', { github_url: githubUrl });
+  return {
+    skills: data.top_technologies || data.topTechnologies || [],
+    repos: data.total_repos || data.totalRepos || 0
+  };
 };
 
 // ==============================
